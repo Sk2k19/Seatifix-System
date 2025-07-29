@@ -1,6 +1,6 @@
 package lldcasestudies.ticketbookingmanagementsystem.models;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +10,23 @@ import java.util.List;
 @Getter
 @Entity
 public class Screen extends BaseModel {
-    private int screenId;
+    private String name ;
+
+    @Enumerated(EnumType.ORDINAL)
+    @ElementCollection
     private List<Features> features;
-    private List<Show> shows;
+
+
+    @OneToMany
     private List<Seat> seats;
 
 }
+/*
+       SCREEN  -------    SHOW
+          1                  1
+          1                  M
+
+          Screen -------- seat
+          1                 M
+          1                  1
+ */
