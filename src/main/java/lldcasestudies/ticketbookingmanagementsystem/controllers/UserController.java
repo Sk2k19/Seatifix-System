@@ -11,23 +11,36 @@ import org.springframework.stereotype.Controller;
 public class UserController {
     UserService userService;
     public UserController(UserService userService) {
+
         this.userService = userService;
     }
 
-    public SignUpResponseDto SignUp(SignUpRequestDto signUpRequestDto) {
+    public SignUpResponseDto SignUp(SignUpRequestDto signUpRequestDto) throws UserNotFoundException {
+        SignUpResponseDto signUpResponseDto = new SignUpResponseDto();
         try {
             User user = userService.SignUp(signUpRequestDto.getName(),signUpRequestDto.getEmail(),signUpRequestDto.getPassword());
-            SignUpResponseDto signUpResponseDto = new SignUpResponseDto();
+
             signUpResponseDto.setStatusDto(responseStatusDto.CONFIRM);
             signUpResponseDto.setUserId(user.getId());
-            return signUpResponseDto;
+
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException("There is already  User with email " + signUpRequestDto.getEmail() + " exists. Please try with different email or try to login");
+        }
+        return signUpResponseDto;
+    }
+    public LogInResponseDto LogIn(LogInRequestDto logInRequestDto) throws UserNotFoundException {
+
+        LogInResponseDto logInResponseDto = new LogInResponseDto();
+
+        try {
+            User user = userService.LogIn(logInRequestDto.getEmail(),logInRequestDto.getPassword());
+            logInResponseDto.setStatusDto(responseStatusDto.CONFIRM);
+
         } catch (UserNotFoundException e) {
             throw new RuntimeException(e);
         }
-    }
-    public LogInResponseDto logIn(LogInRequestDto logInRequestDto){
 
-        return null;
+        return logInResponseDto;
 
     }
 }

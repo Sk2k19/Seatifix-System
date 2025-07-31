@@ -5,6 +5,7 @@ import lldcasestudies.ticketbookingmanagementsystem.exceptions.ShowSeatNotAvaila
 import lldcasestudies.ticketbookingmanagementsystem.exceptions.UserNotFoundException;
 import lldcasestudies.ticketbookingmanagementsystem.models.*;
 import lldcasestudies.ticketbookingmanagementsystem.repositories.*;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class BookingService {
         this.bookingRepository = bookingRepository;
         this.showSeatTypeRepository = showSeatTypeRepository;
     }
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Booking createBooking(Long userId, List<Long> seatShowIds,Long showId) throws UserNotFoundException {
 
         /*
